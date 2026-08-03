@@ -1,0 +1,16 @@
+{
+  "name": "create-hexa-backend",
+  "version": "1.0.0",
+  "description": "CLI to generate Hexagonal Architecture backend projects",
+  "type": "module",
+   "bin": {
+    "create-hexa-backend": "./bin/index.js"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Bharath",
+  "license": "ISC"
+}
