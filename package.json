@@ -3,14 +3,27 @@
   "version": "1.0.0",
   "description": "CLI to generate Hexagonal Architecture backend projects",
   "type": "module",
-   "bin": {
-    "create-hexa-backend": "./bin/index.js"
+  "bin": {
+    "create-hexa-backend": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "templates"
+  ],
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build" : "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js"
   },
-  "keywords": [],
+  "keywords": ["cli" , "backend", "generator", "hexagonal-architecture", "scaffold"],
   "author": "Bharath",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
+  }
 }
