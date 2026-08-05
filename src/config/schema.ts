@@ -11,13 +11,15 @@
 export type PackageManager = 'npm' | 'pnpm' | 'yarn';
 
 /**
- * Discriminated union: TypeScript enforces that `library` can only exist
- * (and is required) when type is 'stateless'. Constructing
- * { type: 'stateful', library: 'jose' } is a compile-time error.
+ * Discriminated union: TypeScript enforces that `library` is required
+ * whenever type is 'stateless' or 'stateful'. Constructing
+ * { type: 'none', library: 'jose' } is a compile-time error.
  */
+export type AuthLibrary = 'better-auth' | 'jose' | 'jsonwebtoken';
+
 export type AuthConfig =
-  | { type: 'stateless'; library: 'jose' | 'jsonwebtoken' | 'better-auth' }
-  | { type: 'stateful' }
+  | { type: 'stateless'; library: AuthLibrary }
+  | { type: 'stateful'; library: AuthLibrary }
   | { type: 'none' };
 
 export type Database = 'mongodb' | 'postgres' | 'mysql';
