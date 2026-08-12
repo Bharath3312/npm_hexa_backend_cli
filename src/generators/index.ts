@@ -41,7 +41,14 @@ export async function generateProject(config: ProjectConfig, templatesRoot: stri
   // Step 3: all the simple one-to-one fields.
   await copyIfNotNull(templatesRoot, targetDir, databasePaths[config.database], `database (${config.database})`);
   await copyIfNotNull(templatesRoot, targetDir, validationPaths[config.validation], `validation (${config.validation})`);
-  await copyIfNotNull(templatesRoot, targetDir, cachePaths[config.cache], `cache (${config.cache})`);
+  // await copyIfNotNull(templatesRoot, targetDir, cachePaths[config.cache], `cache (${config.cache})`);
+
+  const needsRedis = config.cache === 'redis' || config.queue === 'bullmq';
+  if (needsRedis) {
+    await safeCopy(path.join(templatesRoot, 'cache/redis'), targetDir, 'cache (redis, auto-needed)');
+  }
+
+
   await copyIfNotNull(templatesRoot, targetDir, queuePaths[config.queue], `queue (${config.queue})`);
   await copyIfNotNull(templatesRoot, targetDir, websocketPaths[config.websocket], `websocket (${config.websocket})`);
   await copyIfNotNull(templatesRoot, targetDir, uploadPaths[config.upload], `upload (${config.upload})`);

@@ -15,7 +15,7 @@ const fakeConfig: ProjectConfig = {
   database: 'mongodb',
   orm: 'mongoose',
   validation: 'zod',
-  cache: 'redis',
+  cache: 'none',
   queue: 'bullmq',
   websocket: 'none',
   upload: 'multer',
