@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { runPrompts } from './prompts/index.js';
 import { validateConfig, InvalidConfigError } from './config/validate.js';
 import { generateProject } from './generators/index.js';
+import { generatePackageJson } from './generators/configFileGenerator.js';
+import { runInstaller } from './installers/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,17 +21,18 @@ async function main() {
   const targetDir = path.join(process.cwd(), config.projectName);
 
   console.log('\nGenerating your project...\n');
+  await generatePackageJson(config, targetDir);
   await generateProject(config, templatesRoot, targetDir);
+
+  await runInstaller(config, targetDir);
 
   console.log(`\n✅ Project created at: ${targetDir}`);
 }
 
 main().catch((err) => {
   if (err instanceof InvalidConfigError) {
-    // A known, expected problem - show a clean message, no scary stack trace.
     console.error(`\n❌ ${err.message}`);
   } else {
-    // Something unexpected - show the full error for debugging.
     console.error('\n❌ Something went wrong:', err);
   }
   process.exit(1);
