@@ -7,7 +7,10 @@ import { validateConfig, InvalidConfigError } from './config/validate.js';
 import { generateProject } from './generators/index.js';
 import { generatePackageJson } from './generators/configFileGenerator.js';
 import { runInstaller } from './installers/index.js';
-
+import { generateServerFile } from './generators/serverFileGenerator.js';
+import { generateEnvFiles } from './generators/envFilesGenerator.js';
+import { generateUserRoute } from './generators/userRouteGenerator.js';
+import { generateModelsIndex } from './generators/modelsIndexGenerator.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
@@ -19,11 +22,15 @@ async function main() {
 
   const templatesRoot = path.join(__dirname, '..', 'templates');
   const targetDir = path.join(process.cwd(), config.projectName);
+// console.log(templatesRoot , targetDir ,"pathsss");
 
   console.log('\nGenerating your project...\n');
   await generatePackageJson(config, targetDir);
   await generateProject(config, templatesRoot, targetDir);
-
+  await generateServerFile(config, targetDir);
+  await generateEnvFiles(config, targetDir);
+  await generateUserRoute(config,targetDir);
+  await generateModelsIndex(config,targetDir);
   await runInstaller(config, targetDir);
 
   console.log(`\n✅ Project created at: ${targetDir}`);

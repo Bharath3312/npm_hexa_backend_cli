@@ -1,13 +1,17 @@
 import { ApiError } from '../utils/apiError.js';
 
 export function validate(schema, source = 'body') {
-  return (req, res, next) => {
-    const data = source === 'body' ? req.body
-      : source === 'params' ? req.params
-      : source === 'query' ? req.query
-      : req.body;
+  return (req, _res, next) => {
+    const data =
+      source === 'body'
+        ? req.body
+        : source === 'params'
+          ? req.params
+          : source === 'query'
+            ? req.query
+            : req.body;
 
-    const result = schema.safeParse(data);    
+    const result = schema.safeParse(data);
     if (!result.success) {
       const { fieldErrors, formErrors } = result.error.flatten();
 
@@ -18,10 +22,7 @@ export function validate(schema, source = 'body') {
 
       // my approach — ApiError integrates with your errorHandler
       return next(
-        ApiError.badRequest(
-          'Validation failed',
-          errors.length > 0 ? errors : formErrors
-        )
+        ApiError.badRequest('Validation failed', errors.length > 0 ? errors : formErrors),
       );
     }
 
@@ -36,7 +37,7 @@ export function validate(schema, source = 'body') {
 
 // validate multiple sources at once
 export function validateAll({ body, params, query }) {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const errors = [];
 
     if (body) {

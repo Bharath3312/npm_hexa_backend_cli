@@ -22,26 +22,30 @@ import type {
   Logging,
   Mailer,
   EventEmitter,
+  Auth,
 } from './schema.js';
 
-export const databasePaths: Record<Database, string> = {
+export const databasePaths: Record<Database, string | null> = {
   mongodb: 'database/mongodb',
   postgres: 'database/postgres',
   mysql: 'database/mysql',
+  none :null
 };
 
 // ORM does not need its own template folder for now.
 // It is handled together with the database folder.
 // We keep this map here so it is ready when we need it later.
 export const ormPaths: Record<Orm, string | null> = {
-  mongoose: null,
+  mongoose: 'orm/mongoose',
   prisma: null,
   typeorm: null,
+  none : null
 };
 
-export const validationPaths: Record<Validation, string> = {
+export const validationPaths: Record<Validation, string | null> = {
   zod: 'validation/zod',
   joi: 'validation/joi',
+  none : null
 };
 
 // 'none' means: do not copy any folder.
@@ -95,7 +99,7 @@ export const mailerPaths: Record<Mailer, string | null> = {
 // for the library itself, but we may still copy the events/ wiring
 // folder later. Kept null for now.
 export const eventEmitterPaths: Record<EventEmitter, string | null> = {
-  'node-events': null,
+  'node-events': 'events/node-events',
   none: null,
 };
 
@@ -104,11 +108,23 @@ export const eventEmitterPaths: Record<EventEmitter, string | null> = {
  * different for each one (stateless jose ≠ stateful jose, etc).
  * The key is built as "type-library", e.g. "stateless-jose".
  */
-export const authPaths: Record<string, string> = {
-  'stateless-jose': 'auth/stateless-jose',
-  'stateless-jsonwebtoken': 'auth/stateless-jsonwebtoken',
-  'stateless-better-auth': 'auth/stateless-better-auth',
-  'stateful-jose': 'auth/stateful-jose',
-  'stateful-jsonwebtoken': 'auth/stateful-jsonwebtoken',
-  'stateful-better-auth': 'auth/stateful-better-auth',
+// export const authPaths: Record<string, string> = {
+//   'stateless-jose': 'auth/stateless-jose',
+//   'stateless-jsonwebtoken': 'auth/stateless-jsonwebtoken',
+//   'stateless-better-auth': 'auth/stateless-better-auth',
+//   'stateful-jose': 'auth/stateful-jose',
+//   'stateful-jsonwebtoken': 'auth/stateful-jsonwebtoken',
+//   'stateful-better-auth': 'auth/stateful-better-auth',
+// };
+export const authPaths: Record<Auth, string | null> = {
+  jsonwebtoken: 'auth/jsonwebtoken/core',
+  none: null,
+};
+export const authOrmPaths: Record<Exclude<Auth, 'none'>, Record<Orm, string | null>> = {
+  jsonwebtoken: {
+    mongoose: 'auth/jsonwebtoken/adapters/mongoose',
+    prisma: null,
+    typeorm: null,
+    none: null,
+  },
 };

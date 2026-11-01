@@ -16,6 +16,7 @@ const VALID_ORMS_BY_DATABASE: Record<ProjectConfig['database'], ProjectConfig['o
   mongodb: ['mongoose'],
   postgres: ['prisma', 'typeorm'],
   mysql: ['prisma', 'typeorm'],
+  none : ['none']
 };
 
 export class InvalidConfigError extends Error {

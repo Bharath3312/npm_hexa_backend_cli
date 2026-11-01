@@ -1,23 +1,26 @@
 import { Worker } from 'bullmq';
-import { createBullConnection } from '../config/redis.js';
+import { env } from '../config/env.js';
 import { logger } from '../config/logger.js';
+import { createBullConnection } from '../config/redis.js';
 
 class WorkerRegistry {
   static workers = {};
   static options = {
-        concurrency: 5, // Process up to 5 orders concurrently
-  }
-  static createWorker(queueName, processor, options = this.options) {
+    concurrency: 2, // Process up to 2 orders concurrently
+    // maxStalledCount: 3, // Stalled error default 1
+  };
+  static createWorker(queueName, processor, options = WorkerRegistry.options) {
     try {
-      const worker = new Worker(queueName, processor, {
+      const scopedName = `${env.queuePrefix}_${queueName}`; // used ONLY for BullMQ/Redis
+      const worker = new Worker(scopedName, processor, {
         connection: createBullConnection(),
         ...options,
       });
       worker.on('completed', (job) => logger.info(`${queueName} job ${job.id} completed`));
       worker.on('failed', (job, err) => {
         logger.error(`${queueName} job ${job?.id} failed`, { err });
-        console.log(err,"err");
-    });
+        // console.log(err, 'err');
+      });
       worker.on('error', (err) => logger.error(`${queueName} worker error`, { err }));
       return worker;
     } catch (err) {
@@ -27,48 +30,37 @@ class WorkerRegistry {
   }
 
   static registerWorker(queueName, handlers, options = null) {
-    if (!this.workers[queueName]) {
-      const processor = async (job) => {
+    if (!WorkerRegistry.workers[queueName]) {
+      const processor = (job) => {
         let handler;
 
-        if (
-          typeof handlers === 'object' &&
-          handlers !== null
-        ) {
+        if (typeof handlers === 'object' && handlers !== null) {
           handler = handlers[job.name];
 
           if (!handler) {
-            throw new Error(
-              `No handler registered for job "${job.name}" in queue "${queueName}"`
-            );
+            throw new Error(`No handler registered for job "${job.name}" in queue "${queueName}"`);
           }
         } else if (typeof handlers === 'function') {
           handler = handlers;
         } else {
-          throw new Error(
-            `Invalid handlers for queue "${queueName}"`
-          );
+          throw new Error(`Invalid handlers for queue "${queueName}"`);
         }
 
         return handler(job);
       };
 
-      const worker = this.createWorker(
-        queueName,
-        processor,
-        options
-      );
+      const worker = WorkerRegistry.createWorker(queueName, processor, options);
 
       if (!worker) return null;
 
-      this.workers[queueName] = worker;
+      WorkerRegistry.workers[queueName] = worker;
     }
 
-    return this.workers[queueName];
+    return WorkerRegistry.workers[queueName];
   }
 
   static getAllWorkers() {
-    return Object.values(this.workers);
+    return Object.values(WorkerRegistry.workers);
   }
 }
 

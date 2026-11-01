@@ -11,8 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fakeConfig: ProjectConfig = {
   projectName: 'demo-app',
   packageManager: 'npm',
-  auth: { type: 'stateless', library: 'jose' },
-  database: 'mongodb',
+  auth: 'none',  database: 'mongodb',
   orm: 'mongoose',
   validation: 'zod',
   cache: 'none',

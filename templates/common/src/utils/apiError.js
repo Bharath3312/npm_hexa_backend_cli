@@ -3,8 +3,8 @@ export class ApiError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.status = statusCode;
-    this.errors = errors;        // validation errors, multiple messages
-    this.isOperational = true;   // marks this as an expected, handled error
+    this.errors = errors; // validation errors, multiple messages
+    this.isOperational = true; // marks this as an expected, handled error
     Error.captureStackTrace(this, this.constructor);
   }
 

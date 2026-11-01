@@ -35,17 +35,18 @@ export function getRedis() {
 export async function initRedis() {
   const r = getRedis();
   try {
-    await r.connect();
+    await r.connect(); // genuinely lazy now, so this is the real first connect attempt
     await r.ping();
-    logger.info('Redis ready');
+    // logger.info('Redis ready');
     return true;
   } catch (err) {
     logger.warn('Redis not available at startup', { err });
-    return false;
+    return false; // see note below on whether this should be fatal for you
   }
 }
 
 export async function closeRedis() {
+  // close producer connection first
   if (bullProducerConnection) {
     try {
       await bullProducerConnection.quit();
@@ -57,6 +58,7 @@ export async function closeRedis() {
     bullProducerConnection = null;
   }
 
+  // then close base client
   if (client) {
     try {
       await client.quit();

@@ -16,7 +16,7 @@ export class ApiResponse {
   }
 
   static created(res, data = null, message = 'Created successfully') {
-    return this.success(res, data, message, 201);
+    return ApiResponse.success(res, data, message, 201);
   }
 
   static noContent(res) {

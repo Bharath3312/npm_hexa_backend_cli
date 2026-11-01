@@ -1,22 +1,3 @@
-// import { createLogger, format, transports } from 'winston';
-// import { env } from './env.js';
-
-// export const logger = createLogger({
-//   level: env.nodeEnv === 'production' ? 'info' : 'debug',
-//   format: format.combine(
-//     format.timestamp(),
-//     format.errors({ stack: true }),
-//     env.nodeEnv === 'production' ? format.json() : format.combine(format.colorize(), format.simple())
-//   ),
-//   transports: [
-//     new transports.Console(),
-//     new transports.File({ filename: 'logs/error.log', level: 'error' }),
-//     new transports.File({ filename: 'logs/combined.log' }),
-//   ],
-// });
-
-
-
 import pino from 'pino';
 import { createWriteStreams } from './logger.streams.js';
 import { env } from './env.js';

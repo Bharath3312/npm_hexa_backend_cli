@@ -1,5 +1,5 @@
 import { input, select } from '@inquirer/prompts';
-import type { ProjectConfig, AuthLibrary } from '../config/schema.js';
+import type { Orm, ProjectConfig } from '../config/schema.js';
 import {
   SUPPORTED_DATABASES,
   SUPPORTED_ORMS,
@@ -13,7 +13,8 @@ import {
   SUPPORTED_LOGGING,
   SUPPORTED_MAILER,
   SUPPORTED_EVENT_EMITTERS,
-  SUPPORTED_AUTH_CONFIGS,
+  // SUPPORTED_AUTH_CONFIGS,
+  SUPPORTED_AUTH,
 } from '../config/supported.js';
 
 /**
@@ -38,19 +39,23 @@ export async function runPrompts(): Promise<ProjectConfig> {
     ],
   });
 
-  const auth = await askAuth();
+  // const auth = await askAuth();
+  const auth = await pickOne('Authentication:', SUPPORTED_AUTH);
 
   const database = await pickOne('Database:', SUPPORTED_DATABASES);
-  const orm = await pickOne('ORM/ODM:', SUPPORTED_ORMS);
-  const validation = await pickOne('Validation:', SUPPORTED_VALIDATION);
+  let orm:Orm = 'none';
+  if(database != 'none'){
+    orm = await pickOne('ORM/ODM:', SUPPORTED_ORMS);
+  } 
+  const validation = await pickOne('Model request Validation:', SUPPORTED_VALIDATION);
   const cache = await pickOne('Cache:', SUPPORTED_CACHES);
   const queue = await pickOne('Queue:', SUPPORTED_QUEUES);
   const websocket = await pickOne('WebSocket:', SUPPORTED_WEBSOCKETS);
-  const upload = await pickOne('File Upload:', SUPPORTED_UPLOADS);
+  const upload = await pickOne('File Uploadling:', SUPPORTED_UPLOADS);
   const documentation = await pickOne('Documentation:', SUPPORTED_DOCUMENTATION);
   const testing = await pickOne('Testing:', SUPPORTED_TESTING);
   const logging = await pickOne('Logging:', SUPPORTED_LOGGING);
-  const mailer = await pickOne('Mailer:', SUPPORTED_MAILER);
+  const mailer = await pickOne('Mail Notification:', SUPPORTED_MAILER);
   const eventEmitter = await pickOne('Event Emitter:', SUPPORTED_EVENT_EMITTERS);
 
   return {
@@ -77,35 +82,35 @@ export async function runPrompts(): Promise<ProjectConfig> {
  * stateful / none), then "library" — but only if type isn't 'none'.
  * This is the branching logic we talked about earlier.
  */
-async function askAuth(): Promise<ProjectConfig['auth']> {
-  const type = await select({
-    message: 'Authentication:',
-    choices: [
-      { name: 'Stateless', value: 'stateless' },
-      { name: 'Stateful', value: 'stateful' },
-      { name: 'None', value: 'none' },
-    ],
-  });
+// async function askAuth(): Promise<ProjectConfig['auth']> {
+//   const type = await select({
+//     message: 'Authentication:',
+//     choices: [
+//       { name: 'Stateless', value: 'stateless' },
+//       { name: 'Stateful', value: 'stateful' },
+//       { name: 'None', value: 'none' },
+//     ],
+//   });
 
-  if (type === 'none') {
-    return { type: 'none' };
-  }
+//   if (type === 'none') {
+//     return { type: 'none' };
+//   }
 
-  // Only show libraries that are actually supported for this type,
-  // by reading straight from SUPPORTED_AUTH_CONFIGS instead of
-  // hardcoding a list here.
-  const libraries = SUPPORTED_AUTH_CONFIGS.filter(
-    (c): c is { type: 'stateless' | 'stateful'; library: AuthLibrary } =>
-      c.type === type,
-  ).map((c) => c.library);
+//   // Only show libraries that are actually supported for this type,
+//   // by reading straight from SUPPORTED_AUTH_CONFIGS instead of
+//   // hardcoding a list here.
+//   const libraries = SUPPORTED_AUTH_CONFIGS.filter(
+//     (c): c is { type: 'stateless' | 'stateful'; library: AuthLibrary } =>
+//       c.type === type,
+//   ).map((c) => c.library);
 
-  const library = await select({
-    message: 'Authentication library:',
-    choices: libraries.map((lib) => ({ name: lib, value: lib })),
-  });
+//   const library = await select({
+//     message: 'Authentication library:',
+//     choices: libraries.map((lib) => ({ name: lib, value: lib })),
+//   });
 
-  return { type, library } as ProjectConfig['auth'];
-}
+//   return { type, library } as ProjectConfig['auth'];
+// }
 
 /**
  * Generic helper for every simple field: if there's only ONE

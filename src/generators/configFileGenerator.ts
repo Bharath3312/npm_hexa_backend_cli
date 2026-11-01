@@ -15,8 +15,8 @@ export async function generatePackageJson(config: ProjectConfig, targetDir: stri
     type: 'module',
     main: 'src/server.js',
     scripts: {
-      start: 'node src/server.js',
-      dev: 'node --watch src/server.js',
+      dev: 'nodemon src/server.js',
+      start: 'cross-env NODE_ENV=production node src/server.js',
     },
     dependencies: {},
     devDependencies: {},

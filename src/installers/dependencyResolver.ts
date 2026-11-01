@@ -19,13 +19,22 @@ export function resolveDependencies(config: ProjectConfig): ResolvedDependencies
   // Always needed, no matter what the user picks.
   dependencies.add('express');
   dependencies.add('dotenv');
-
+  dependencies.add('cross-env');
+  dependencies.add('http-graceful-shutdown'); 
+  dependencies.add('cors');
+  devDependencies.add("nodemon");
   // Auth
-  if (config.auth.type !== 'none') {
-    if (config.auth.library === 'jose') dependencies.add('jose');
-    if (config.auth.library === 'jsonwebtoken') dependencies.add('jsonwebtoken');
-    if (config.auth.library === 'better-auth') dependencies.add('better-auth');
-  }
+  // if (config.auth.type !== 'none') {
+  //   if (config.auth.library === 'jose') dependencies.add('jose');
+  //   if (config.auth.library === 'jsonwebtoken') dependencies.add('jsonwebtoken');
+  //   if (config.auth.library === 'better-auth') dependencies.add('better-auth');
+  // }
+  // Auth
+if (config.auth === 'jsonwebtoken'){
+  dependencies.add('jsonwebtoken');
+  dependencies.add('ua-parser-js');
+  dependencies.add('cookie-parser')
+} 
 
   // Database + ORM
   if (config.database === 'mongodb') dependencies.add('mongoose');
@@ -46,6 +55,7 @@ export function resolveDependencies(config: ProjectConfig): ResolvedDependencies
 
   // Queue
   if (config.queue === 'bullmq') {
+    dependencies.add('express-basic-auth'); 
     dependencies.add('bullmq');
     dependencies.add('@bull-board/api');
     dependencies.add('@bull-board/express');
@@ -58,7 +68,11 @@ export function resolveDependencies(config: ProjectConfig): ResolvedDependencies
   if (config.websocket === 'socketio') dependencies.add('socket.io');
 
   // Upload
-  if (config.upload === 'multer') dependencies.add('multer');
+  if (config.upload === 'multer') {
+    dependencies.add('multer');
+    dependencies.add('multer-s3');
+    dependencies.add('@aws-sdk/client-s3');
+  }
 
   // Documentation
   if (config.documentation === 'swagger') {
@@ -72,11 +86,19 @@ export function resolveDependencies(config: ProjectConfig): ResolvedDependencies
   if (config.testing === 'vitest') devDependencies.add('vitest');
 
   // Logging
-  if (config.logging === 'pino') dependencies.add('pino');
+  if (config.logging === 'pino'){
+     dependencies.add('pino');
+     dependencies.add('pino-http');
+     dependencies.add('pino-pretty');
+  }
   if (config.logging === 'winston') dependencies.add('winston');
 
   // Mailer
-  if (config.mailer === 'nodemailer') dependencies.add('nodemailer');
+// Mailer
+if (config.mailer === 'nodemailer') {
+  dependencies.add('nodemailer');
+  dependencies.add('nodemailer-express-handlebars');
+}
 
   // EventEmitter: 'node-events' is BUILT INTO Node itself.
   // No package needed — this is why nothing is added here for it.

@@ -11,7 +11,8 @@ import type {
   Logging,
   Mailer,
   EventEmitter,
-  AuthConfig,
+  // AuthConfig,
+  Auth,
   PackageManager,
 } from './schema.js';
 
@@ -31,9 +32,9 @@ import type {
  * never even select an option that isn't built yet.
  */
 
-export const SUPPORTED_DATABASES: Database[] = ['mongodb'];
+export const SUPPORTED_DATABASES: Database[] = ['mongodb' ,'none'];
 
-export const SUPPORTED_ORMS: Orm[] = ['mongoose'];
+export const SUPPORTED_ORMS: Orm[] = ['mongoose' ,'none'];
 
 
 export const SUPPORTED_PACKAGE_MANAGERS: PackageManager[] = ['npm'];
@@ -50,7 +51,7 @@ export const SUPPORTED_DOCUMENTATION: Documentation[] = ['swagger', 'none'];
 
 export const SUPPORTED_TESTING: Testing[] = ['none'];
 
-export const SUPPORTED_VALIDATION: Validation[] = ['zod'];
+export const SUPPORTED_VALIDATION: Validation[] = ['zod' ,'joi' , 'none'];
 
 export const SUPPORTED_LOGGING: Logging[] = ['pino'];
 
@@ -65,12 +66,13 @@ export const SUPPORTED_EVENT_EMITTERS: EventEmitter[] = ['node-events', 'none'];
  * words, this is a list of full auth config objects — every combo
  * that is ready to use right now.
  */
-export const SUPPORTED_AUTH_CONFIGS: AuthConfig[] = [
-  { type: 'stateless', library: 'jose' },
-  { type: 'stateless', library: 'jsonwebtoken' },
-  { type: 'stateless', library: 'better-auth' },
-  { type: 'stateful', library: 'jose' },
-  { type: 'stateful', library: 'jsonwebtoken' },
-  { type: 'stateful', library: 'better-auth' },
-  { type: 'none' },
-];
+// export const SUPPORTED_AUTH_CONFIGS: AuthConfig[] = [
+//   { type: 'stateless', library: 'jose' },
+//   { type: 'stateless', library: 'jsonwebtoken' },
+//   { type: 'stateless', library: 'better-auth' },
+//   { type: 'stateful', library: 'jose' },
+//   { type: 'stateful', library: 'jsonwebtoken' },
+//   { type: 'stateful', library: 'better-auth' },
+//   { type: 'none' },
+// ];
+export const SUPPORTED_AUTH: Auth[] = ['jsonwebtoken', 'none'];

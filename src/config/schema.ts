@@ -15,18 +15,19 @@ export type PackageManager = 'npm' | 'pnpm' | 'yarn';
  * whenever type is 'stateless' or 'stateful'. Constructing
  * { type: 'none', library: 'jose' } is a compile-time error.
  */
-export type AuthLibrary = 'better-auth' | 'jose' | 'jsonwebtoken';
+// export type AuthLibrary = 'better-auth' | 'jose' | 'jsonwebtoken';
 
-export type AuthConfig =
-  | { type: 'stateless'; library: AuthLibrary }
-  | { type: 'stateful'; library: AuthLibrary }
-  | { type: 'none' };
+// export type AuthConfig =
+//   | { type: 'stateless'; library: AuthLibrary }
+//   | { type: 'stateful'; library: AuthLibrary }
+//   | { type: 'none' };
+export type Auth = 'jsonwebtoken' | 'none';
 
-export type Database = 'mongodb' | 'postgres' | 'mysql';
+export type Database = 'mongodb' | 'postgres' | 'mysql' | 'none';
 
-export type Orm = 'mongoose' | 'prisma' | 'typeorm';
+export type Orm = 'mongoose' | 'prisma' | 'typeorm' | 'none';
 
-export type Validation = 'zod' | 'joi';
+export type Validation = 'zod' | 'joi' | 'none';
 
 export type Cache = 'redis' | 'none';
 
@@ -55,7 +56,7 @@ export type EventEmitter = 'node-events' | 'none';
 export interface ProjectConfig {
   projectName: string;
   packageManager: PackageManager;
-  auth: AuthConfig;
+  auth: Auth;
   database: Database;
   orm: Orm;
   validation: Validation;

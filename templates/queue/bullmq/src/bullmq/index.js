@@ -1,18 +1,17 @@
 import { logger } from "../config/logger.js";
-// import { sendMail } from "./handlers/mail.handler.js";
 import QueueRegistry from "./queue.registry.js";
 import WorkerRegistry from "./worker.registry.js";
 
 
 export async function startAll() {
-    // QueueRegistry.register('mail',{
-    //     attempts: 5,
-    //     backoff: { type: 'exponential', delay: 3000 },
-    //     removeOnComplete: 100,
-    //     removeOnFail: 100,
-    // })
+  // Example code
+  //   QueueRegistry.register(QUEUE_CONFIGS.MAIL.name, QUEUE_CONFIGS.MAIL.queueOptions);
+  // WorkerRegistry.registerWorker(
+  //   QUEUE_CONFIGS.MAIL.name,
+  //   sendMail,
+  //   QUEUE_CONFIGS.MAIL.workerOptions,
+  // );
 
-    // WorkerRegistry.registerWorker('mail',sendMail ,{ concurrency: 3 })
 }
 
 
